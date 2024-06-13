@@ -1,7 +1,7 @@
 
 
 process bam2fastq {
-    publishDir "./results_bam2fastq", pattern: "**", mode: "copy"
+    publishDir "${params.outdir}/results_bam2fastq", pattern: "**", mode: "copy"
 
     input:
     // path(bamfiles)
@@ -14,9 +14,9 @@ process bam2fastq {
 
     script:
     """
-    ${params.BAM2FASTQ_PATH} \
+    bam2fastq \
     ${bamfiles} \
-    --output fastq_results/${sample} \
+    --output ${sample} \
     --num-threads ${params.nthr_bam2fastq}
 
     """

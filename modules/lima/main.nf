@@ -1,7 +1,7 @@
 
 
 process lima {
-    publishDir "./results_lima", pattern: "**", mode: "copy"
+    publishDir "${params.outdir}/results_lima", pattern: "**", mode: "copy"
 
     input:
     // path(bamfiles)
@@ -12,23 +12,23 @@ process lima {
 
     output:
     tuple val(meta), path("**HiFi.*.bam"), emit: lima_bams
-    path ("lima_output/lima_run-log.txt"), emit: lima_log
+    path ("lima_run-log.txt"), emit: lima_log
     // counts, rapport, summary (global metrics)
 
     
     script:
     """
-    ${params.LIMA_PATH} \
+    lima \
     ${bamfiles} \
     ${kinex_primer_reference} \
-    lima_results/HiFi.bam \
+    HiFi.bam \
     --hifi-preset ASYMMETRIC \
     --split-named \
     --biosample-csv ${samplesheet} \
     --split-subdirs \
     --num-threads ${params.nthr_lima} \
     --log-level ${meta.log_lima} \
-    --log-file lima_results/lima_run-log.txt"
+    --log-file lima_run-log.txt
 
     """
 

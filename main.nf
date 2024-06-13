@@ -81,6 +81,7 @@ workflow {
     // bam2fastq_input_edit | view
 
     bam2fastq(bam2fastq_input)
-
+    // get error for bam2fasrtq
+    // similar to the following https://github.com/PacificBiosciences/pbbioconda/issues/559
 
 }

@@ -1,7 +1,7 @@
 
 process skera_split {
     
-    publishDir "./results_skera", pattern: "**", mode: "copy"
+    publishDir "${params.outdir}/results_skera", pattern: "**", mode: "copy"
 
 
 
@@ -14,17 +14,17 @@ process skera_split {
 
     output:
     tuple val(meta), path("**${meta.movie}.skera.bam"), emit: skera_bams
-    path ("skera_output/skera_run-log.txt"), emit: skera_log
+    path ("skera_run-log.txt"), emit: skera_log
 
     script:
     """
-    ${params.SKERA_PATH} split \
+    skera split \
     ${bamfiles} \
     ${mas_seq_primers_reference} \
-    skera_output/${meta.movie}.skera.bam \
+    ${meta.movie}.skera.bam \
     --num-threads ${params.nthr_skera} \
     --log-level ${meta.log_skera} \
-    --log-file skera_output/skera_run-log.txt
+    --log-file skera_run-log.txt
     """
     // script from Stephane (bash)
     // skera split \
