@@ -9,6 +9,8 @@ include {lima;} from './modules/lima'
 
 include {bam2fastq;} from './modules/bam2fastq'
 
+include {barcode_QC_Kinnex;} from './modules/barcode_QC_Kinnex'
+
 
 workflow {
     // inintiate channels for skera
@@ -23,6 +25,14 @@ workflow {
     meta.log_skera = params.log_skera
     meta.log_lima = params.log_lima
 
+    samplesheet_object = file(params.samplesheet_path, checkIfExists: true)
+    projectname = samplesheet_object.getBaseName()
+    println projectname
+
+    project_split = projectname.split('_')
+    // println project_split[0]
+
+    meta.project = project_split[0]
     // println meta
 
     // movie_ch = channel.value(params.movie)
@@ -91,5 +101,20 @@ workflow {
     // bam2fastq_input_edit | view
 
     bam2fastq(bam2fastq_input)
+
+    // samplesheet_object = file(params.samplesheet_path, checkIfExists: true)
+    // projectname = samplesheet_object.getBaseName()
+    // println projectname
+
+    // project_split = projectname.split('_')
+    // // println project_split[0]
+
+    // meta.project = project_split[0]
+
+    rmd_file = channel.fromPath("${projectDir}/modules/barcode_QC_Kinnex/assets/barcode_QC_Kinnex.Rmd", checkIfExists: true)
+
+
+
+    barcode_QC_Kinnex(lima.out.lima_counts | combine(samplesheet_ch) | combine(rmd_file))
 
 }
