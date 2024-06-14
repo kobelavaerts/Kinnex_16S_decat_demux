@@ -14,8 +14,8 @@ process skera_split {
 
     output:
     tuple val(meta), path("**${meta.movie}.skera.bam"), emit: skera_bams
-    path ("skera_run-log.txt"), emit: skera_log
-
+    tuple val(meta), path ("skera_run-log.txt"), emit: skera_log
+    tuple val(meta), path("${meta.movie}.skera.summary.csv"), emit:skera_summary
     script:
     """
     skera split \

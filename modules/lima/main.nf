@@ -13,7 +13,10 @@ process lima {
     output:
     tuple val(meta), path("**HiFi.*.bam"), emit: lima_bams
     tuple val(meta), path("**HiFi.*.bam.pbi"), emit: lima_pbi
-    path ("lima_run-log.txt"), emit: lima_log
+    tuple val(meta), path ("lima_run-log.txt"), emit: lima_log
+    tuple val(meta), path ("HiFi.lima.counts"), emit: lima_counts
+    tuple val(meta), path ("HiFi.lima.report"), emit: lima_report
+    tuple val(meta), path ("HiFi.lima.summary"), emit: lima_summary
     // counts, rapport, summary (global metrics)
 
     
