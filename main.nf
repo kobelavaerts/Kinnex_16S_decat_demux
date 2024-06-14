@@ -13,7 +13,7 @@ include {bam2fastq;} from './modules/bam2fastq'
 workflow {
     // inintiate channels for skera
     input_bam_ch = channel.fromPath(params.bampath, checkIfExists: true)
-    input_bam_ch | view
+    // input_bam_ch | view
 
     reference_mas_seq_primers_ch = channel.fromPath(params.reference_mas_seq_primers)
 
@@ -23,7 +23,7 @@ workflow {
     meta.log_skera = params.log_skera
     meta.log_lima = params.log_lima
 
-    println meta
+    // println meta
 
     // movie_ch = channel.value(params.movie)
     // skera_input = movie_ch | combine(input_bam_ch)
@@ -35,7 +35,7 @@ workflow {
     skera_input = input_bam_ch \
         | map{it -> tuple(meta, it)}
 
-    skera_input | view
+    // skera_input | view
 
 
     //  run skera
@@ -47,7 +47,7 @@ workflow {
     lima_input = skera_split.out.skera_bams \
         | combine(samplesheet_ch)
 
-    lima_input | view
+    // lima_input | view
     reference_kinex_primers_ch = channel.fromPath(params.reference_kinex_primers)
 
 
@@ -63,15 +63,25 @@ workflow {
 
     // sample_info | view
 
+// lima.out.lima_bams | view
     lima_output_only_bams = lima.out.lima_bams \
-        | map{ meta, bams -> bams}
+        | map{ meta, bams -> bams} \
+        | flatten
+
+    // lima_output_only_bams | view
+
+    lima_output_only_pbi = lima.out.lima_pbi \
+        | map{ meta, pbi -> pbi} \
+        | flatten
+
 
     bam2fastq_input = lima_output_only_bams \
-        | flatten \
-        | combine(sample_info)
-        | filter { bams, barcode, sample -> bams =~ /\/HiFi.${barcode}.bam/}
+        | combine(lima_output_only_pbi) \
+        | combine(sample_info) \
+        | filter { bams, pbi, barcode, sample -> bams =~ /\/HiFi.${barcode}.bam/ } \
+        | filter { bams, pbi, barcode, sample -> pbi =~ /\/HiFi.${barcode}.bam.pbi/ } 
 
-    bam2fastq_input | view
+    // bam2fastq_input | view
 
     // bam2fastq_input_edit = bam2fastq_input \
     //     | map { it -> tuple(meta, it)} \
@@ -81,7 +91,5 @@ workflow {
     // bam2fastq_input_edit | view
 
     bam2fastq(bam2fastq_input)
-    // get error for bam2fasrtq
-    // similar to the following https://github.com/PacificBiosciences/pbbioconda/issues/559
 
 }

@@ -6,7 +6,7 @@ process bam2fastq {
     input:
     // path(bamfiles)
     // tuple val(meta), path(bamfiles), val(sample)
-    tuple path(bamfiles), val(barcode), val(sample)
+    tuple path(bamfiles), path(index), val(barcode), val(sample)
 
 
     output:
