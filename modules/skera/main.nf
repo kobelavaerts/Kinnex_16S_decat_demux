@@ -22,7 +22,7 @@ process skera_split {
     ${bamfiles} \
     ${mas_seq_primers_reference} \
     ${meta.movie}.skera.bam \
-    --num-threads ${params.nthr_skera} \
+    --num-threads ${task.cpus} \
     --log-level ${meta.log_skera} \
     --log-file skera_run-log.txt
     """

@@ -30,7 +30,7 @@ process lima {
     --split-named \
     --biosample-csv ${samplesheet} \
     --split-subdirs \
-    --num-threads ${params.nthr_lima} \
+    --num-threads ${task.cpus} \
     --log-level ${meta.log_lima} \
     --log-file lima_run-log.txt
 

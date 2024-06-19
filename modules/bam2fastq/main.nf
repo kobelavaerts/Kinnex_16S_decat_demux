@@ -17,7 +17,7 @@ process bam2fastq {
     bam2fastq \
     ${bamfiles} \
     --output ${sample} \
-    --num-threads ${params.nthr_bam2fastq}
+    --num-threads ${task.cpus}
 
     """
 
