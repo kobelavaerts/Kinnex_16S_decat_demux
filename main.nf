@@ -35,6 +35,12 @@ workflow {
     meta.project = project_split[0]
     // println meta
 
+    // create file boject oflogo file
+    // logo_file = file("${projectDir}/modules/barcode_QC_Kinnex/assets/NC_logo_200.png", checkIfExists: true)
+
+    // add logo file to meta data
+    // meta.logo_file = logo_file
+
     // movie_ch = channel.value(params.movie)
     // skera_input = movie_ch | combine(input_bam_ch)
 
@@ -113,8 +119,8 @@ workflow {
 
     rmd_file = channel.fromPath("${projectDir}/modules/barcode_QC_Kinnex/assets/barcode_QC_Kinnex.Rmd", checkIfExists: true)
 
+    logo_file_ch = channel.fromPath("${projectDir}/modules/barcode_QC_Kinnex/assets/NC_logo_200.png", checkIfExists: true)
 
-
-    barcode_QC_Kinnex(lima.out.lima_counts | combine(samplesheet_ch) | combine(rmd_file))
+    barcode_QC_Kinnex(lima.out.lima_counts | combine(samplesheet_ch) | combine(rmd_file) | combine(logo_file_ch))
 
 }

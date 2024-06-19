@@ -4,7 +4,6 @@ process skera_split {
     publishDir "${params.outdir}/results_skera", pattern: "**", mode: "copy"
 
 
-
     input:
     // path(bamfiles)
     tuple val(meta), path(bamfiles)
@@ -16,6 +15,7 @@ process skera_split {
     tuple val(meta), path("**${meta.movie}.skera.bam"), emit: skera_bams
     tuple val(meta), path ("skera_run-log.txt"), emit: skera_log
     tuple val(meta), path("${meta.movie}.skera.summary.csv"), emit:skera_summary
+
     script:
     """
     skera split \

@@ -6,7 +6,7 @@ process barcode_QC_Kinnex {
 
 
     input:
-    tuple val(meta), path(lima_counts), path(samplesheet), path(rmd_file)
+    tuple val(meta), path(lima_counts), path(samplesheet), path(rmd_file), path(logo_file)
 
 
     output:
