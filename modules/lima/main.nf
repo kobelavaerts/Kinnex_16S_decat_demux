@@ -3,6 +3,8 @@
 process lima {
     publishDir "${params.outdir}/results_lima", pattern: "**", mode: "copy"
 
+    publishDir "${params.final_results}", pattern: "HiFi.lima.{counts,summary}", mode: "copy"
+
     input:
     // path(bamfiles)
     tuple val(meta), path(bamfiles), path(samplesheet)
@@ -15,7 +17,7 @@ process lima {
     tuple val(meta), path("**HiFi.*.bam.pbi"), emit: lima_pbi
     tuple val(meta), path ("lima_run-log.txt"), emit: lima_log
     tuple val(meta), path ("HiFi.lima.counts"), emit: lima_counts
-    tuple val(meta), path ("HiFi.lima.report"), emit: lima_report
+    // tuple val(meta), path ("HiFi.lima.report"), emit: lima_report
     tuple val(meta), path ("HiFi.lima.summary"), emit: lima_summary
     // counts, rapport, summary (global metrics)
 

@@ -10,7 +10,7 @@ process barcode_QC_Kinnex {
 
 
     output:
-    tuple val(meta), path("**"), emit: skera_bams
+    tuple val(meta), path("**"), emit: qc_file
 
     script:
     """

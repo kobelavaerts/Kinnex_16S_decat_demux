@@ -11,6 +11,8 @@ include {bam2fastq;} from './modules/bam2fastq'
 
 include {barcode_QC_Kinnex;} from './modules/barcode_QC_Kinnex'
 
+include {create_archive;} from './modules/create_archive'
+
 
 workflow {
     // inintiate channels for skera
@@ -123,4 +125,31 @@ workflow {
 
     barcode_QC_Kinnex(lima.out.lima_counts | combine(samplesheet_ch) | combine(rmd_file) | combine(logo_file_ch))
 
+
+    readme_file = channel.fromPath("${projectDir}/assets/README.txt", checkIfExists: true)
+    zymo_file = channel.fromPath("${projectDir}/assets/ds1706_zymobiomics_microbial_community_standards_data_sheet.pdf", checkIfExists: true)
+    run_qc_file = channel.fromPath(params.runqc_pdf, checkIfExists: true)
+
+    info_files = readme_file | combine(zymo_file) | combine(run_qc_file) | collect(flat: false)
+
+    finalfiles = lima.out.lima_counts \
+        | join(lima.out.lima_summary) \
+        | join(barcode_QC_Kinnex.out.qc_file) \
+        | join(skera_split.out.skera_summary) \
+        | map{meta, counts, summary, qc, sk_summary  -> tuple(counts, summary, qc, sk_summary)} \
+        | combine(samplesheet_ch) \
+        | collect(flat: false)
+
+    // finalfiles | view
+    archive_input = bam2fastq.out.fastqz \
+        | map{ files, bc, smpl -> files } \
+        | collect \
+        | map{ files -> tuple(meta, files)} \
+        | combine(info_files) \
+        | combine(finalfiles)
+    
+    // archive_input | view
+
+
+    create_archive(archive_input)
 }

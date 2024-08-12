@@ -3,6 +3,7 @@ process skera_split {
     
     publishDir "${params.outdir}/results_skera", pattern: "**", mode: "copy"
 
+    publishDir "${params.final_results}", pattern: "${meta.movie}.skera.summary.csv", saveAs: { filename -> "skera.summary.csv" }, mode: "copy"
 
     input:
     // path(bamfiles)
